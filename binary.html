@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </head>
+    <body>
+        <div id="link-section">
+            <a href="https://blog.etopiei.com/post/53">Click here to see how this clock works</a>
+        </div>
+        <div id="first-min-digit">
+            <div class="bit" id="first-min-digit1"></div>
+            <div class="bit" id="first-min-digit2"></div>
+            <div class="bit" id="first-min-digit3"></div>
+        </div>
+        <div id="other-digits">
+            <div class="bit" id="other-digits1"></div>
+            <div class="bit" id="other-digits2"></div>
+            <div class="bit" id="other-digits3"></div>
+            <div class="bit" id="other-digits4"></div>
+            <div class="bit" id="other-digits5"></div>
+            <div class="bit" id="other-digits6"></div>
+            <div class="bit" id="other-digits7"></div>
+            <div class="bit" id="other-digits8"></div>
+        </div>
+    </body>
+</html>
+
+<style>
+body {
+    height: 100%;
+    margin: 0;
+    background-color: #8ba494;
+    padding-right: 1%;
+}
+html {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+}
+#link-section {
+    width: 100%;
+    height: 2em;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    flex-direction: row;
+}
+#link-section a {
+    font-size: 1em;
+    padding-top: 1em;
+    color: black;
+}
+#first-min-digit {
+    width: 100%;
+    height: calc(50% - 2em);
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    align-items: center;
+}
+#other-digits {
+    width: 100%;
+    height: 50%;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    align-items: center;
+}
+.bit {
+    width: 10%;
+    margin-left: 2%;
+    padding-bottom: 10%;
+}
+</style>
+
+<script>
+function makeStringFromTime(time) {
+    if (time < 10) {
+        return "0" + time.toString();
+    }
+    return time.toString();
+}
+
+function applyCurrentTime() {
+    const date = new Date();
+    const hours = makeStringFromTime(date.getHours());
+    const minutes = makeStringFromTime(date.getMinutes());
+    const firstMinDigit = parseInt(minutes.charAt(0));
+    const otherDigits = parseInt((hours + minutes.charAt(1)));
+
+    const otherDigitsIdToBitPattern = {
+        "other-digits1": 0b10000000, 
+        "other-digits2": 0b01000000, 
+        "other-digits3": 0b00100000, 
+        "other-digits4": 0b00010000, 
+        "other-digits5": 0b00001000, 
+        "other-digits6": 0b00000100, 
+        "other-digits7": 0b00000010, 
+        "other-digits8": 0b00000001
+    };
+
+    Object.entries(otherDigitsIdToBitPattern).forEach(([docId, compNumber]) => {
+        if (compNumber & otherDigits) {
+            document.getElementById(docId).style.backgroundColor = "white";
+        } else {
+            document.getElementById(docId).style.backgroundColor = "black";
+        }
+    });
+
+    const firstMinDigitsIdToBitPattern = {
+        "first-min-digit1": 0b100, 
+        "first-min-digit2": 0b010, 
+        "first-min-digit3": 0b001, 
+    };
+
+    Object.entries(firstMinDigitsIdToBitPattern).forEach(([docId, compNumber]) => {
+        if (compNumber & firstMinDigit) {
+            document.getElementById(docId).style.backgroundColor = "white";
+        } else {
+            document.getElementById(docId).style.backgroundColor = "black";
+        }
+    });
+}
+
+applyCurrentTime();
+setInterval(applyCurrentTime, 1000);
+</script>
